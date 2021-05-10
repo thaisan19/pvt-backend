@@ -32,7 +32,7 @@ module.exports = mongoose => {
   schema.virtual("coursePublished", {
     ref: 'Course', //The Model to use
     localField: '_id', //Find in Model, where localField 
-    foreignField: 'tutorCourses', // is equal to foreignField
+    foreignField: 'ownerId', // is equal to foreignField
   });
   schema.set('toObject', {virutals: true});
   schema.set('toJSON', {virtuals: true});

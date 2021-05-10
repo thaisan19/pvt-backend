@@ -12,6 +12,9 @@ module.exports = app => {
     // Retrieve all Tutor
     router.get("/all", admin.findAll);
 
+    //update read to true
+    router.put('/read-to-true', admin.readToTrue)
+
     // Retrieve all published Tutor
     router.get("/published", admin.findAllPublished);
 

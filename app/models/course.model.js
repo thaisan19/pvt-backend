@@ -13,9 +13,9 @@ module.exports = mongoose => {
       tutoringDays: {type: Array, require: false},
       name: {type: String, required: true},
       Price: {type: String, required: true},
-      tutorCourses:{
+      ownerId:{
           type: Schema.Types.ObjectId,
-          ref: 'Tutor',
+          ref: 'Tutor, AdminUser',
           require: true
       },
       
