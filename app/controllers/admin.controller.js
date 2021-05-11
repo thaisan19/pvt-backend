@@ -54,6 +54,31 @@ exports.createTutor = async(req, res, next) => {
         next(error)
     }
   };
+
+
+exports.adminLogin = async(req, res, next) => {
+    try{
+        const result = req.body
+        const Adminuser = await Admin.findOne({ email: result.email})
+        if(!Adminuser) return next(createError.NotFound('Email is not registered'))
+
+        const validPassword = await bcrypt.compare(result.password, Adminuser.password)
+        if(!validPassword) return next(createError.Unfound('Email/Password not valid'))
+
+        const expiresIn = 5000
+        const role = "admin"
+        const userId = Adminuser.id
+        const accessToken = await signAccessToken(Adminuser.id)
+        // const refreshToken = await signRefreshToken(Adminuser.id)
+  
+        res.send({ accessToken, userId, expiresIn, role });
+      
+    }catch(error){
+        next(error)
+    }
+  };  
+
+
 // Retrieve all tutor from the database.
 exports.findAll = async (req, res) => {
     try {

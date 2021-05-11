@@ -6,6 +6,9 @@ module.exports = app => {
     // Create a new Admin
     router.post("/register", admin.createAdmin);
 
+    //login route
+    router.post('/login', admin.adminLogin);
+
     // Create a new Tutor
     router.post("/create-tutor", admin.createTutor);
 
@@ -14,6 +17,7 @@ module.exports = app => {
 
     // Retrieve all published Tutor
     router.get("/published", admin.findAllPublished);
+
 
     // Retrieve all unread Tutor
     router.get("/not-read", admin.findAllUnread);

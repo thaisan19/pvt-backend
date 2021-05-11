@@ -188,36 +188,20 @@ exports.delete = (req, res) => {
     });
 };
 // tutor Login Route
-exports.userLogin = async(req, res, next) => {
+exports.TutorLogin = async(req, res, next) => {
   try{
       const result = req.body
       const Tutoruser = await Tutor.findOne({ email: result.email})
-      const Adminuser = await Admin.findOne({ email: result.email})
-      if(!Tutoruser && !Adminuser) return next(createError.NotFound('Email is not registered'))
-      if(Tutoruser)
-      {
-        const validPassword = await bcrypt.compare(result.password, Tutoruser.password)
-        if(!validPassword) return next(createError.Unauthorized('Email/Password not valid'))
-        const role = "tutor"
-        const userId = Tutoruser.id
-        const expiresIn = 5000
-        const accessToken = await signAccessToken(Tutoruser.id)
+      if(!Tutoruser) return next(createError.NotFound('Email is not registered'))
+      const validPassword = await bcrypt.compare(result.password, Tutoruser.password)
+      if(!validPassword) return next(createError.Unauthorized('Email/Password not valid'))
+      const role = "tutor"
+      const userId = Tutoruser.id
+      const expiresIn = 5000
+      const accessToken = await signAccessToken(Tutoruser.id)
         // const refreshToken = await signRefreshToken(Tutoruser.id)
         
-        res.send({ accessToken, userId, expiresIn, role });
-      }
-      if(Adminuser)
-      {
-        const validPassword = await bcrypt.compare(result.password, Adminuser.password)
-        if(!validPassword) return next(createError.Unfound('Email/Password not valid'))
-        const expiresIn = 5000
-        const role = "admin"
-        const userId = Adminuser.id
-        const accessToken = await signAccessToken(Adminuser.id)
-        // const refreshToken = await signRefreshToken(Adminuser.id)
-
-        res.send({ accessToken, userId, expiresIn, role });
-      }
+      res.send({ accessToken, userId, expiresIn, role });
   }catch(error){
       next(error)
   }
