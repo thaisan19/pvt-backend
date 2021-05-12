@@ -1,21 +1,30 @@
 const multer = require('multer');
-const fileFilter = function(req, file, next){
-    const allowedTypes = ["image/png", "image/jpg", "application/pdf"];
-    if(!allowedTypes.includes(file.minetype)){
-        const error = new Error("Wrong file type");
-        error.code = "LITMIT_FILE_TYPES";
-        return next(error, false);
-    }
-    next(null, true)
-}
-const MAX_SIZE = 2000000;
-const upload = multer({
-    dest: "../uploads/",
-    fileFilter,
-    limits: {
-        filesize: MAX_SIZE
+const DIR = "./uploads/";
+
+const storage = multer.diskStorage({
+    destination: (req, file, next) => {
+        next(null, DIR);
+    },
+    filename: (req, file, next) => {
+        const fileName = file.originalname.toLocaleLowerCase().split(' ').join('-');
+        next(null, fileName)
     }
 });
+
+var upload = multer({
+    storage: storage,
+    fileFilter: (req, file, next) => {
+        if(file.mimetype == "image/png" || file.mimetype == "image/jpeg" || file.mimetype == "application/pdf"){
+            next(null, true);
+        }else{
+            next(null, false);
+            return next( new Error('Only .png, .jpg and .jpeg format allowed!'))
+        } 
+            
+    }
+})
+
+    
 module.exports = {
     upload
 }

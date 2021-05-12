@@ -62,7 +62,7 @@ exports.findOne = (req, res) => {
 exports.findCourse = async (req, res, next) =>{
   try{
     const id = req.params.id;
-    const courseId = await Course.find({tutorCourses: id})
+    const courseId = await Course.find({ownerId: id})
     if(!courseId) throw createError.Conflict("Wrong ID") 
     res.send(courseId)
   } 

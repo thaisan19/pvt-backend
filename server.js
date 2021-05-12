@@ -34,22 +34,9 @@ db.mongoose
     process.exit();
   });
 // simple route
-app.get("/", verifyAccessToken,(req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
-});
-
-app.use(function(err, req, res, next) {
-  if(err.code === "LITMIT_FILE_TYPES"){
-    res.status(422).json({ error: "Only images are allowed" });
-    return;
-  }
-
-  if(err.code === "LITMIT_FILE_TYPES"){
-    res.status(422).json({ error: "Your file is too large" });
-    return;
-  }
-})
-
+// app.get("/", verifyAccessToken,(req, res) => {
+//   res.json({ message: "Welcome to bezkoder application." });
+// });
 
 require("./app/routes/tutor.routes")(app);
 require("./app/routes/course.routes")(app);

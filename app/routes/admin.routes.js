@@ -1,5 +1,7 @@
 module.exports = app => {
     const admin = require("../controllers/admin.controller.js");
+
+    const { upload } = require("../helpers/multer")
   
     var router = require("express").Router();
 
@@ -7,10 +9,12 @@ module.exports = app => {
     router.post("/register", admin.createAdmin);
 
     // Create a new Tutor
-    router.post("/create-tutor", admin.createTutor);
+    router.post("/register-tutor",upload.array("files", 2), admin.createTutor);
 
     // Retrieve all Tutor
     router.get("/all", admin.findAll);
+
+    router.post('/login', admin.adminLogin);
 
     // Retrieve all published Tutor
     router.get("/published", admin.findAllPublished);

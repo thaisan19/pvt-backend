@@ -12,8 +12,6 @@ const {
     verifyRefreshToken } = require('../helpers/jwt_helper');
 dotenv.config();
 const nodemailer = require('nodemailer');
-const { required } = require('@hapi/joi')
-const { registerSchema, updateSchema } = require('../helpers/validation_schema');
 const { request } = require("../models");
 exports.createAdmin = async(req, res, next) => {
     try {
@@ -38,7 +36,29 @@ exports.createAdmin = async(req, res, next) => {
 exports.createTutor = async(req, res, next) => {
     try {
       // Create a Tutor
-      const tutor = await registerSchema.validateAsync(req.body)
+      const tutor = await new Tutor({
+          fullName: req.body.fullName,
+          password: req.body.password,
+          phoneNumber: req.body.phoneNumber,
+          email: req.body.email,
+          gender: req.body.gender,
+          dateOfBirth: req.body.dateOfBirth,
+          expertises: req.body.expertises,
+          tutoringDays: req.body.tutoringDays,
+          tutoringHours: req.body.tutoringHours,
+          aboutMe: req.body.aboutMe,
+          monthlyRate: req.body.monthlyRate,
+          eduBackground: req.body.eduBackground,
+          achievement: req.body.achievement,
+          files: []
+      })
+
+      const url = req.protocol + "://" + req.get('host')
+      for (var i = 0; i < req.files.length; i++){
+       tutor.files.push(url + '/uploads/' + req.files[i].filename)
+      }
+
+
       const role = "tutor"
       const read = false
       const published = false
@@ -50,7 +70,6 @@ exports.createTutor = async(req, res, next) => {
     const savedTutor = await newTutor.save()
     res.send("Tutor is saved")
     } catch (error) {
-        if(error.isJoi === true) error.status = 422
         next(error)
     }
   };
@@ -119,6 +138,28 @@ exports.readToTrue = async(req, res, next) => {
   }
 }
 
+exports.adminLogin = async(req, res, next) => {
+    try{
+        const result = req.body
+        const Adminuser = await AdminUser.findOne({ email: result.email})
+        if(!Adminuser) return next(createError.NotFound('Email is not registered'))
+
+        const validPassword = await bcrypt.compare(result.password, Adminuser.password)
+        if(!validPassword) return next(createError.Unfound('Email/Password not valid'))
+
+        const expiresIn = "3600"
+        const role = "admin"
+        const userId = Adminuser.id
+        const accessToken = await signAccessToken(Adminuser.id)
+        // const refreshToken = await signRefreshToken(Adminuser.id)
+  
+        res.send({ accessToken, userId, expiresIn, role });
+      
+    }catch(error){
+        next(error)
+    }
+  };  
+
 //SendEmail
 exports.sendEmail = async (req, res, next) => {
     if (!req.body) {
@@ -186,7 +227,7 @@ exports.update = async(req, res, next) => {
         });
       }
       const ID = req.params.id;
-      const result = await updateSchema.validateAsync(req.body)
+      const result = await req.body
       const Tutoruser = await Tutor.findOne({ _id: ID})
       if(result.fullName)
       {
@@ -250,8 +291,7 @@ exports.update = async(req, res, next) => {
       }
       res.send("Your update is successfully!")
     } catch (error) {
-      if(error.isJoi === true) error.status = 422
-        next(error)
+      next(error)
     }
   };
 // Delete all Tutor from the database.

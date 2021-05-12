@@ -1,7 +1,5 @@
-const { required } = require('@hapi/joi')
 const dotenv = require('dotenv');
 const createError = require('http-errors');
-const { registerSchema, updateSchema } = require('../helpers/validation_schema');
 const { 
         signAccessToken,
         signRefreshToken,
@@ -10,13 +8,12 @@ dotenv.config();
 const db = require("../models");
 const Tutor = db.tutor;
 const bcrypt = require('bcrypt');
-const Admin = db.admin;
 const nodemailer = require('nodemailer');
 // Create and Save a new Tutor
 exports.create = async(req, res, next) => {
   try {
     // Create a Tutor
-    const result = await registerSchema.validateAsync(req.body)
+    const result = await req.body
     const role = "tutor"
     const read = false
     const published = false
@@ -52,7 +49,6 @@ exports.create = async(req, res, next) => {
   }
   sendMail(result.email)    
   }catch (error) {
-        if(error.isJoi === true) error.status = 422
         next(error)
   }
 };
@@ -91,7 +87,7 @@ exports.update = async(req, res, next) => {
       });
     }
     const ID = req.params.id;
-    const result = await updateSchema.validateAsync(req.body)
+    const result = await req.body
     const Tutoruser = await Tutor.findOne({ _id: ID})
     if(result.email) 
     {
@@ -140,6 +136,16 @@ exports.update = async(req, res, next) => {
       Tutoruser.aboutMe = result.aboutMe
       await Tutoruser.save()
     }
+    if(result.gender)
+    {
+      Tutoruser.gender = result.gender
+      await Tutoruser.save()
+    }
+    if(result.dateOfBirth)
+    {
+      Tutoruser.dateOfBirth = result.dateOfBirth
+      await Tutoruser.save()
+    }
     if(result.monthlyRate)
     {
       Tutoruser.monthlyRate = result.monthlyRate
@@ -162,8 +168,7 @@ exports.update = async(req, res, next) => {
     }
     res.send("Your update is successfully!")
   } catch (error) {
-    if(error.isJoi === true) error.status = 422
-      next(error)
+    next(error)
   }
 };
 // Delete a Tutor with the specified id in the request
@@ -188,36 +193,20 @@ exports.delete = (req, res) => {
     });
 };
 // tutor Login Route
-exports.userLogin = async(req, res, next) => {
+exports.TutorLogin = async(req, res, next) => {
   try{
       const result = req.body
       const Tutoruser = await Tutor.findOne({ email: result.email})
-      const Adminuser = await Admin.findOne({ email: result.email})
-      if(!Tutoruser && !Adminuser) return next(createError.NotFound('Email is not registered'))
-      if(Tutoruser)
-      {
-        const validPassword = await bcrypt.compare(result.password, Tutoruser.password)
-        if(!validPassword) return next(createError.Unauthorized('Email/Password not valid'))
-        const role = "tutor"
-        const userId = Tutoruser.id
-        const expiresIn = 5000
-        const accessToken = await signAccessToken(Tutoruser.id)
+      if(!Tutoruser) return next(createError.NotFound('Email is not registered'))
+      const validPassword = await bcrypt.compare(result.password, Tutoruser.password)
+      if(!validPassword) return next(createError.Unauthorized('Email/Password not valid'))
+      const role = "tutor"
+      const userId = Tutoruser.id
+      const expiresIn = "3600"
+      const accessToken = await signAccessToken(Tutoruser.id)
         // const refreshToken = await signRefreshToken(Tutoruser.id)
         
-        res.send({ accessToken, userId, expiresIn, role });
-      }
-      if(Adminuser)
-      {
-        const validPassword = await bcrypt.compare(result.password, Adminuser.password)
-        if(!validPassword) return next(createError.Unfound('Email/Password not valid'))
-        const expiresIn = 5000
-        const role = "admin"
-        const userId = Adminuser.id
-        const accessToken = await signAccessToken(Adminuser.id)
-        // const refreshToken = await signRefreshToken(Adminuser.id)
-
-        res.send({ accessToken, userId, expiresIn, role });
-      }
+      res.send({ accessToken, userId, expiresIn, role });
   }catch(error){
       next(error)
   }
