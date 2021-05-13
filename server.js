@@ -18,6 +18,8 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 // db calling
+app.use('/uploads/',express.static('uploads'));
+
 const db = require("./app/models");
 db.mongoose
   .connect(db.url, {
