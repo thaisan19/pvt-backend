@@ -9,7 +9,9 @@ module.exports = app => {
     router.post("/register", admin.createAdmin);
 
     // Create a new Tutor
-    router.post("/register-tutor",upload.array("files", 2), admin.createTutor);
+    var cpUpload = upload.fields([{name: "profile", maxCount: 1}, {name:"cv", maxCount: 1}])
+
+    router.post("/register-tutor", cpUpload, admin.createTutor);
 
     // Retrieve all Tutor
     router.get("/all", admin.findAll);

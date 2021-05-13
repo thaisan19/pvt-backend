@@ -18,7 +18,11 @@ module.exports = mongoose => {
       monthlyRate: {type: String, required: false},
       eduBackground: {type: String, required: false},
       achievement: {type: String, required: false},
-      files: {
+      profile: {
+        type: Array,
+        required: false
+      },
+      cv: {
         type: Array,
         required: false
       },

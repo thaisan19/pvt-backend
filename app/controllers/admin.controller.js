@@ -50,12 +50,18 @@ exports.createTutor = async(req, res, next) => {
           monthlyRate: req.body.monthlyRate,
           eduBackground: req.body.eduBackground,
           achievement: req.body.achievement,
-          files: []
+          profile: req.files.profile,
+          cv: req.files.cv
       })
 
-      const url = req.protocol + "://" + req.get('host')
+      const profileUrl = req.protocol + "://" + req.get('host')
       for (var i = 0; i < req.files.length; i++){
-       tutor.files.push(url + '/uploads/' + req.files[i].filename)
+       tutor.profile.push(profileUrl + '/uploads/' + req.files[i].filename)
+      }
+
+      const cvUrl = req.protocol + "://" + req.get('host')
+      for (var i = 0; i < req.files.length; i++){
+       tutor.cv.push(cvUrl + '/uploads/' + req.files[i].filename)
       }
 
 
@@ -262,6 +268,16 @@ exports.update = async(req, res, next) => {
       if(result.aboutMe)
       {
         Tutoruser.aboutMe = result.aboutMe
+        await Tutoruser.save()
+      }
+      if(result.gender)
+      {
+        Tutoruser.gender = result.gender
+        await Tutoruser.save()
+      }
+      if(result.dateOfBirth)
+      {
+        Tutoruser.dateOfBirth = result.dateOfBirth
         await Tutoruser.save()
       }
       if(result.monthlyRate)

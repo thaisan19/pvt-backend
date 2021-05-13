@@ -13,15 +13,43 @@ const nodemailer = require('nodemailer');
 exports.create = async(req, res, next) => {
   try {
     // Create a Tutor
-    const result = await req.body
-    const role = "tutor"
-    const read = false
-    const published = false
-    result.read = read
-    result.published = published
-    result.role = role
-    // Save Tutor in the database
-    const newTutor = new Tutor(result)
+    const tutor = await new Tutor({
+          fullName: req.body.fullName,
+          password: req.body.password,
+          phoneNumber: req.body.phoneNumber,
+          email: req.body.email,
+          gender: req.body.gender,
+          dateOfBirth: req.body.dateOfBirth,
+          expertises: req.body.expertises,
+          tutoringDays: req.body.tutoringDays,
+          tutoringHours: req.body.tutoringHours,
+          aboutMe: req.body.aboutMe,
+          monthlyRate: req.body.monthlyRate,
+          eduBackground: req.body.eduBackground,
+          achievement: req.body.achievement,
+          profile: req.files.profile,
+          cv: req.files.cv
+      })
+
+      const profileUrl = req.protocol + "://" + req.get('host')
+      for (var i = 0; i < req.files.length; i++){
+       tutor.profile.push(profileUrl + '/uploads/' + req.files[i].filename)
+      }
+
+      const cvUrl = req.protocol + "://" + req.get('host')
+      for (var i = 0; i < req.files.length; i++){
+       tutor.cv.push(cvUrl + '/uploads/' + req.files[i].filename)
+      }
+
+
+      const role = "tutor"
+      const read = false
+      const published = false
+      tutor.read = read
+      tutor.published = published
+      tutor.role = role
+      // Save Tutor in the database
+    const newTutor = new Tutor(tutor)
     const savedTutor = await newTutor.save()
     const sendMail = (email) => {
       var Transport = nodemailer.createTransport({
@@ -35,7 +63,7 @@ exports.create = async(req, res, next) => {
       let sender = "TheMentor";
       mailOptions = {
           from: sender,
-          to: result.email,
+          to: tutor.email,
           subject: "Register noted",
           html: `We will contact for interview soon.`
       };
@@ -43,11 +71,11 @@ exports.create = async(req, res, next) => {
           if(error) {
               console.log(error);
           }else {
-            res.send(result, req.files);
+            res.send(tutor);
           }
       })
   }
-  sendMail(result.email)    
+  sendMail(tutor.email)    
   }catch (error) {
         next(error)
   }
