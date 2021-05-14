@@ -1,5 +1,6 @@
 const db = require("../models");
 const Request = db.request;
+const nodemailer = require("nodemailer");
 
 //create request
 exports.course = async (req, res, next) => {
@@ -8,7 +9,33 @@ exports.course = async (req, res, next) => {
         const newRequest = new Request(result)
         const saveRequest = await newRequest.save()
 
-        res.send("Request successed")
+        const sendMail = (email) => {
+            var Transport = nodemailer.createTransport({
+                service: "Gmail",
+                auth: {
+                    user: process.env.GMAIL,
+                    pass: process.env.PASSWORD
+                }
+            });
+            var mailOptions;
+            let sender = "TheMentor";
+            mailOptions = {
+                from: sender,
+                to: result.email,
+                subject: `Greeting ${result.studentName} 🤗, your request has been arrived ⚡`,
+                html: `You have made a ${result.title} of ${result.objName}. <br>We will get back to you as soon as possible 💪🤘<br> Thank you for usong our services 🙏 <br>See you soon...`
+            };
+            Transport.sendMail(mailOptions, function(error, response){
+                if(error) {
+                    console.log(error);
+                }else {
+                  res.send("Request successed, please check your email 🙏")
+                }
+            })
+        }
+        sendMail(result.email)
+
+        
 
     } catch (error) {
         next(error)

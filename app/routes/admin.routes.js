@@ -34,7 +34,7 @@ module.exports = app => {
     router.put("/send-email", admin.sendEmail)
 
     // Update a Tutor with id
-    router.put("/update/:id", admin.update);
+    router.put("/update/:id",cpUpload, admin.update);
 
     // Delete all Tutor
     router.delete("/delete-all", admin.deleteAll);

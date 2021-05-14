@@ -72,9 +72,33 @@ exports.createTutor = async(req, res, next) => {
       tutor.published = published
       tutor.role = role
       // Save Tutor in the database
-    const newTutor = new Tutor(tutor)
-    const savedTutor = await newTutor.save()
-    res.send("Tutor is saved")
+      const newTutor = new Tutor(tutor)
+      const savedTutor = await newTutor.save()
+      const sendMail = (email) => {
+      var Transport = nodemailer.createTransport({
+          service: "Gmail",
+          auth: {
+              user: process.env.GMAIL,
+              pass: process.env.PASSWORD
+          }
+      });
+      var mailOptions;
+      let sender = "TheMentor";
+      mailOptions = {
+          from: sender,
+          to: tutor.email,
+          subject: "Register noted",
+          html: `We will contact for interview soon.`
+      };
+      Transport.sendMail(mailOptions, function(error, response){
+          if(error) {
+              console.log(error);
+          }else {
+            res.send(tutor);
+          }
+      })
+  }
+    sendMail(tutor.email)
     } catch (error) {
         next(error)
     }
@@ -233,7 +257,24 @@ exports.update = async(req, res, next) => {
         });
       }
       const ID = req.params.id;
-      const result = await req.body
+      const result = await {
+        fullName: req.body.fullName,
+        password: req.body.password,
+        phoneNumber: req.body.phoneNumber,
+        email: req.body.email,
+        gender: req.body.gender,
+        dateOfBirth: req.body.dateOfBirth,
+        expertises: req.body.expertises,
+        tutoringDays: req.body.tutoringDays,
+        tutoringHours: req.body.tutoringHours,
+        aboutMe: req.body.aboutMe,
+        monthlyRate: req.body.monthlyRate,
+        eduBackground: req.body.eduBackground,
+        achievement: req.body.achievement,
+        profile: req.files.profile,
+        cv: req.files.cv
+      }
+      
       const Tutoruser = await Tutor.findOne({ _id: ID})
       if(result.fullName)
       {
@@ -298,11 +339,23 @@ exports.update = async(req, res, next) => {
       if(result.profile)
       {
         Tutoruser.profile = result.profile
+
+        const profileUrl = req.protocol + "://" + req.get('host')
+        for (var i = 0; i < req.files.length; i++){
+          Tutoruser.profile.push(profileUrl + '/uploads/' + req.files[i].filename)
+        }
+
         await Tutoruser.save()
       }
       if(result.cv)
       {
         Tutoruser.cv = result.cv
+
+        const cvUrl = req.protocol + "://" + req.get('host')
+        for (var i = 0; i < req.files.length; i++){
+          Tutoruser.cv.push(cvUrl + '/uploads/' + req.files[i].filename)
+        }
+
         await Tutoruser.save()
       }
       res.send("Your update is successfully!")
