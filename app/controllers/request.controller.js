@@ -21,9 +21,9 @@ exports.course = async (req, res, next) => {
             let sender = "TheMentor";
             mailOptions = {
                 from: sender,
-                to: result.email,
-                subject: `Greeting ${result.studentName} 🤗, your request has been arrived ⚡`,
-                html: `You have made a ${result.title} of ${result.objName}. <br>We will get back to you as soon as possible 💪🤘<br> Thank you for usong our services 🙏 <br>See you soon...`
+                to: result.studentEmail,
+                subject: `Greeting ${result.studentName} 🤗, your request has been arrived to the PRIVATE TUTORING team⚡`,
+                html: `You have made a <b>${result.title}<b> of <b>${result.objName}<b>. <br>We will get back to you as soon as possible 💪🤘<br> Thank you for usong our services 🙏 <br>See you soon...`
             };
             Transport.sendMail(mailOptions, function(error, response){
                 if(error) {
@@ -33,7 +33,7 @@ exports.course = async (req, res, next) => {
                 }
             })
         }
-        sendMail(result.email)
+        sendMail(result.studentEmail)
 
         
 
