@@ -17,7 +17,7 @@ module.exports = app => {
     router.delete("/delete/:id", tutor.delete);
 
     //login route
-    router.post('/login', tutor.TutorLogin);
+    router.post('/login-tutor', tutor.TutorLogin);
 
     //refresh-token route
     router.post('/refresh-token', tutor.tutorRefreshToken);

@@ -25,12 +25,20 @@ exports.create = async (req, res) => {
 };
 
 // Retrieve all course from the database.
-exports.findAll = (req, res) => {
+exports.findAll = async(req, res) => {
   const title = req.query.title;
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
 
   Course.find(condition)
     .then(data => {
+      // for( i = 0; i < data.length; i++ )
+      // {
+      //   var OwnerId = data[i].ownerId
+      //   const Tutoruser = await Tutor.find({_id: OwnerId})
+      //   var Ownerprofile = Tutoruser
+      //   console.log(Ownerprofile[3])
+      // }
+      
       res.send(data);
     })
     .catch(err => {

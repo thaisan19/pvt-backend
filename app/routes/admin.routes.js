@@ -36,6 +36,8 @@ module.exports = app => {
     // Update a Tutor with id
     router.put("/update/:id",cpUpload, admin.update);
 
+    router.put("/update-password/:id", admin.updatePassword);
+
     // Delete all Tutor
     router.delete("/delete-all", admin.deleteAll);
 
