@@ -4,7 +4,7 @@ module.exports = app => {
     var router = require("express").Router();
   
     // request course
-    router.post("/add", request.course);
+    router.post("/make", request.makeRequest);
 
     // retrieve all request
     router.get("/get-reqs", request.findAllReqs);

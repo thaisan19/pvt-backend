@@ -4,12 +4,12 @@ const nodemailer = require("nodemailer");
 const dotenv = require('dotenv');
 dotenv.config();
 //create request
-exports.course = async (req, res, next) => {
+exports.makeRequest = async (req, res, next) => {
     try {
         const result = req.body
         const newRequest = new Request(result)
         const saveRequest = await newRequest.save()
-
+        
         const sendMail = (email) => {
             var Transport = nodemailer.createTransport({
                 service: "Gmail",
@@ -31,10 +31,12 @@ exports.course = async (req, res, next) => {
                     console.log(error);
                 }else {
                   res.send("Request successed, please check your email 🙏")
+                  
                 }
             })
         }
         sendMail(result.studentEmail)
+        
 
         
 
