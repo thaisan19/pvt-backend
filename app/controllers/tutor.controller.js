@@ -64,8 +64,8 @@ exports.create = async(req, res, next) => {
       mailOptions = {
           from: sender,
           to: tutor.email,
-          subject: "Register noted",
-          html: `We will contact for interview soon.`
+          subject: "Private Tutoring Tutor Registration Alert 🎉",
+          html: `Thank you for registered with our services. We will contact you for the <strong>INTERVIEW</strong> very soon.<br>See you soon <strong>TUTOR</strong>. 🤗👏👋`
       };
       Transport.sendMail(mailOptions, function(error, response){
           if(error) {

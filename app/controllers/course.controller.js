@@ -2,7 +2,8 @@ const db = require("../models");
 const Course = db.course;
 const Tutor = db.tutor;
 const createError = require('http-errors');
-
+const dotenv = require('dotenv');
+dotenv.config();
 // Create and Save a new course
 exports.create = async (req, res) => {
   
@@ -11,11 +12,13 @@ exports.create = async (req, res) => {
       res.status(400).send({ message: "Content can not be empty!" });
       return;
     }
-  //   if (!req.body.tutorCourses) {
-  //     res.status(400).send({ message: "Content can not be empty!" });
-  //     return;
-  // }
+  
       const course = new Course(req.body);
+      const OwnerId = course.ownerId
+      const Tutoruser = await Tutor.findOne({_id: OwnerId})
+
+      course.ownerProfile= Tutoruser.profile
+      
       await course.save()
 
       res.status(200).json({success:true, data:course})
@@ -29,16 +32,9 @@ exports.findAll = async(req, res) => {
   const title = req.query.title;
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
 
-  Course.find(condition)
-    .then(data => {
-      // for( i = 0; i < data.length; i++ )
-      // {
-      //   var OwnerId = data[i].ownerId
-      //   const Tutoruser = await Tutor.find({_id: OwnerId})
-      //   var Ownerprofile = Tutoruser
-      //   console.log(Ownerprofile[3])
-      // }
-      
+  Course.find (condition)
+    .then (data => {
+  
       res.send(data);
     })
     .catch(err => {

@@ -1,6 +1,5 @@
 const { text } = require("body-parser");
 const { Schema } = require("mongoose");
-const shortid = require('shortid');
 
 module.exports = mongoose => {
   var schema = mongoose.Schema(

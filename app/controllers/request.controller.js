@@ -1,7 +1,8 @@
 const db = require("../models");
 const Request = db.request;
 const nodemailer = require("nodemailer");
-
+const dotenv = require('dotenv');
+dotenv.config();
 //create request
 exports.course = async (req, res, next) => {
     try {
@@ -23,7 +24,7 @@ exports.course = async (req, res, next) => {
                 from: sender,
                 to: result.studentEmail,
                 subject: `Greeting ${result.studentName} 🤗, your request has been arrived to the PRIVATE TUTORING team⚡`,
-                html: `You have made a <b>${result.title}<b> of <b>${result.objName}<b>. <br>We will get back to you as soon as possible 💪🤘<br> Thank you for usong our services 🙏 <br>See you soon...`
+                html: `You have made a <b>${result.title}</b> of <b>${result.objName}</b>. <br>We will get back to you as soon as possible 💪🤘<br> Thank you for usong our services 🙏 <br>See you soon...`
             };
             Transport.sendMail(mailOptions, function(error, response){
                 if(error) {

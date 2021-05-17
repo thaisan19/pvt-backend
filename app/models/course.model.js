@@ -18,6 +18,10 @@ module.exports = mongoose => {
           ref: 'Tutor,AdminUser',
           require: false
       },
+      ownerProfile:{
+        type: Array,
+        require: false
+      }
       
     },
     { timestamps: true }

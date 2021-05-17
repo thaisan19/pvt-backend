@@ -7,7 +7,7 @@ const { verifyAccessToken } = require('./app/helpers/jwt_helper');
 const app = express();
 
 var corsOptions = {
-  origin: "https://private-tutoring.netlify.app"
+  origin: "http://localhost:8080"
 };
 
 app.use(cors(corsOptions));
