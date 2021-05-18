@@ -31,9 +31,9 @@ exports.makeRequest = async (req, res, next) => {
             console.log(3)
             Transport.sendMail(mailOptions, function(error, response){
                 if(error) {
-                    response.send(error);
+                    res.send(error);
                 }else {
-                    response.send("Request successed, please check your email 🙏")
+                    res.send("Request successed, please check your email 🙏")
                   
                 }
             })
