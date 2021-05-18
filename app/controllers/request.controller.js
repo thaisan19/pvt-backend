@@ -6,12 +6,13 @@ dotenv.config();
 //create request
 exports.makeRequest = async (req, res, next) => {
     try {
-        const result = req.body
-        const newRequest = new Request(result)
-        const saveRequest = await newRequest.save()
-        await sendMail(result.studentEmail)
+        const result = req.body;
+        const newRequest = new Request(result);
+        const saveRequest = await newRequest.save();
+
+        
+        
         const sendMail = (email) => {
-          console.log(1)
             var Transport = nodemailer.createTransport({
                 service: "Gmail",
                 auth: {
@@ -19,7 +20,6 @@ exports.makeRequest = async (req, res, next) => {
                     pass: process.env.PASSWORD
                 }
             });
-            console.log(2)
             var mailOptions;
             let sender = "TheMentor";
             mailOptions = {
@@ -28,7 +28,6 @@ exports.makeRequest = async (req, res, next) => {
                 subject: `Greeting ${result.studentName} 🤗, your request has been arrived to the PRIVATE TUTORING team⚡`,
                 html: `You have made a <b>${result.title}</b> of <b>${result.objName}</b>. <br>We will get back to you as soon as possible 💪🤘<br> Thank you for usong our services 🙏 <br>See you soon...`
             };
-            console.log(3)
             Transport.sendMail(mailOptions, function(error, response){
                 if(error) {
                     res.send(error);
@@ -38,7 +37,8 @@ exports.makeRequest = async (req, res, next) => {
                 }
             })
         }
-        res.send("hello")
+        sendMail(result.studentEmail)
+        
      
     } catch (error) {
         next(error)
