@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const getPagination = (page, size) => {
-  const limit = size ? +size : 3;
+  const limit = size ? +size : data.totalDocs;
   const offset = page ? page * limit : 0;
 
   return { limit, offset };
@@ -46,7 +46,7 @@ exports.findAll = async(req, res) => {
   Course.paginate(condition, { offset, limit })
     .then (data => {
   
-      res.send(data);
+      res.send(data.docs);
     })
     .catch(err => {
       res.status(500).send({
