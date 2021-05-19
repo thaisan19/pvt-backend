@@ -37,10 +37,11 @@ exports.create = async (req, res) => {
 
 // Retrieve all course from the database.
 exports.findAll = async(req, res) => {
-  const { page, size } = req.query;
-  const { limit, offset } = getPagination(page, size);
-  const title = req.query.title;
+  const { page, size, title } = req.query;
+  
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
+
+  const { limit, offset } = getPagination(page, size);
 
   Course.paginate(condition, { offset, limit })
     .then (data => {
