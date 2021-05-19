@@ -116,10 +116,26 @@ exports.findAll = async (req, res) => {
   }
 };
 // Find all published Tutor
-exports.findAllPublished = (req, res) => {
-  Tutor.find({ published: true })
+exports.findAllPublished = async(req, res) => {
+
+  const totalTutor = await Tutor.find({})
+  const totalToturLength = await totalTutor.length
+
+  const getPagination = (page, size) => {
+
+  var limit = size ? +size : totalToturLength;
+  var offset = page ? page * limit : 0;
+
+  return { limit, offset };
+};
+
+  const { page, size } = req.query;
+  
+  const { limit, offset } = getPagination(page, size);
+
+  Tutor.paginate({ published: true }, {limit, offset})
     .then(data => {
-      res.send(data);
+      res.send(data.docs);
     })
     .catch(err => {
       res.status(500).send({

@@ -5,6 +5,7 @@ const createError = require('http-errors');
 const dotenv = require('dotenv');
 dotenv.config();
 
+
 // Create and Save a new course
 exports.create = async (req, res) => {
   
@@ -19,8 +20,9 @@ exports.create = async (req, res) => {
       const Tutoruser = await Tutor.findOne({_id: OwnerId})
 
       course.ownerProfile= Tutoruser.profile
-      
       await course.save()
+      Tutoruser.ownedCourses = course
+      await Tutoruser.save()
 
       res.status(200).json({success:true, data:course})
   }catch(err){
@@ -31,9 +33,13 @@ exports.create = async (req, res) => {
 // Retrieve all course from the database.
 exports.findAll = async(req, res) => {
 
+  const totalCourse = await Course.find({})
+  const totalCourseLength = await totalCourse.length
+
   const getPagination = (page, size) => {
-  const limit = size ? +size : 15;
-  const offset = page ? page * limit : 0;
+
+  var limit = size ? +size : totalCourseLength;
+  var offset = page ? page * limit : 0;
 
   return { limit, offset };
 };

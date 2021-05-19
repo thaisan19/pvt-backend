@@ -1,5 +1,6 @@
 const { text } = require("body-parser");
 const { Schema } = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 module.exports = mongoose => {
   var schema = mongoose.Schema(
@@ -25,6 +26,10 @@ module.exports = mongoose => {
         type: Array,
         required: false
       },
+      ownedCourses:{
+        type: Array,
+        require: false
+      },
       // profile: {type: Buffer, require: false },
       // cv: {type: Buffer, require: false },
       published: Boolean,
@@ -36,6 +41,8 @@ module.exports = mongoose => {
     },
     { timestamps: true }
   );
+
+  schema.plugin(mongoosePaginate);
 
 //Virtual schema
 
