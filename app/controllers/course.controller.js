@@ -4,6 +4,14 @@ const Tutor = db.tutor;
 const createError = require('http-errors');
 const dotenv = require('dotenv');
 dotenv.config();
+
+const getPagination = (page, size) => {
+  const limit = size ? +size : 3;
+  const offset = page ? page * limit : 0;
+
+  return { limit, offset };
+};
+
 // Create and Save a new course
 exports.create = async (req, res) => {
   
@@ -29,10 +37,12 @@ exports.create = async (req, res) => {
 
 // Retrieve all course from the database.
 exports.findAll = async(req, res) => {
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
   const title = req.query.title;
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
 
-  Course.find (condition)
+  Course.paginate(condition, { offset, limit })
     .then (data => {
   
       res.send(data);
