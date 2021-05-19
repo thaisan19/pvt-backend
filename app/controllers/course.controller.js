@@ -119,16 +119,48 @@ exports.update = (req, res) => {
 };
 
 // Delete a course with the specified id in the request
-exports.delete = (req, res) => {
-  const id = req.params.id;
+exports.delete = async(req, res) => {
+      const id = req.params.id;
+      // const Course_id = await Course.findOne({ _id: id })
+      // const TutorId = Course_id.ownerId
+      // const findCourseInTutor = await Tutor.findOne({ _id: TutorId})
+      // const lengthCourseTutor = findCourseInTutor.ownedCourses
+      // const newList = []
+
+      // for ( i = 0; i < lengthCourseTutor.length; i++) {
+        
+      //   const checkId = await Course.find({ _id: id})
+      //   if(!checkId) newList.push(lengthCourseTutor[i])
+      // }
+      // findCourseInTutor.ownedCourses = newList
+      // console.log(newList)
+      // await findCourseInTutor.save()
+
 
   Course.findByIdAndRemove(id)
-    .then(data => {
+    .then( async data => {
+      
+
       if (!data) {
         res.status(404).send({
           message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
         });
       } else {
+      const TutorId = data.ownerId
+      const findCourseInTutor = await Tutor.findOne({ _id: TutorId})
+      const lengthCourseTutor = findCourseInTutor.ownedCourses
+      const newList = []
+
+      for ( i = 0; i < lengthCourseTutor.length; i++) {
+        const check_id = await lengthCourseTutor[i]._id
+        if(check_id != data.id){
+          const getCourse = await Course.findOne({ _id: check_id})
+          if(getCourse) newList.push(lengthCourseTutor[i])
+        }
+        
+      }
+      findCourseInTutor.ownedCourses = newList
+      await findCourseInTutor.save()
         res.send({
           message: "Tutorial was deleted successfully!"
         });

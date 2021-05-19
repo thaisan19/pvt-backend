@@ -423,6 +423,7 @@ exports.delete = (req, res) => {
   const id = req.params.id;
   Tutor.findByIdAndRemove(id)
     .then(data => {
+      
       if (!data) {
         res.status(404).send({
           message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
