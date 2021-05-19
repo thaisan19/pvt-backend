@@ -5,13 +5,6 @@ const createError = require('http-errors');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const getPagination = (page, size) => {
-  const limit = size ? +size : data.totalDocs;
-  const offset = page ? page * limit : 0;
-
-  return { limit, offset };
-};
-
 // Create and Save a new course
 exports.create = async (req, res) => {
   
@@ -37,6 +30,14 @@ exports.create = async (req, res) => {
 
 // Retrieve all course from the database.
 exports.findAll = async(req, res) => {
+
+  const getPagination = (page, size) => {
+  const limit = size ? +size : 15;
+  const offset = page ? page * limit : 0;
+
+  return { limit, offset };
+};
+
   const { page, size, title } = req.query;
   
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
