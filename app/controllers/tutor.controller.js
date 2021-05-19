@@ -54,6 +54,9 @@ exports.create = async(req, res, next) => {
     const sendMail = (email) => {
       var Transport = nodemailer.createTransport({
           service: "Gmail",
+          host: "smtp.gmail.com",
+          secure: false,
+          port: process.env.PORT,
           auth: {
               user: process.env.GMAIL,
               pass: process.env.PASSWORD
