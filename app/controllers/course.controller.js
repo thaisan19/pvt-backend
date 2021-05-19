@@ -21,7 +21,8 @@ exports.create = async (req, res) => {
 
       course.ownerProfile= Tutoruser.profile
       await course.save()
-      Tutoruser.ownedCourses = course
+
+      Tutoruser.ownedCourses.push(course)
       await Tutoruser.save()
 
       res.status(200).json({success:true, data:course})
