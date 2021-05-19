@@ -38,12 +38,10 @@ module.exports = mongoose => {
   });
 
   const Course = mongoose.model("Course", schema);
-  // Course.paginate(query, options)
-  // .then(result => {})
-  // .catch(error => {});
+  Course.paginate(query, options)
+  .then(result => {})
+  .catch(error => {});
 
-  return Course;
-  
   
 };
 
