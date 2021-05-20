@@ -161,15 +161,14 @@ exports.findAllUnread = (req, res) => {
     });
 };
 // Find a single Tutor with an id
-exports.findOne = async (req, res, next) => {
+exports.findOneTutor = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const id = req.params.id.trim();
     const Tutoruser = await Tutor.findById(id).populate({ path: 'coursePublished' })
-    let Data = Tutoruser
-    Data.password = "#"
-    if (!Data)
+    
+    if (!Tutoruser)
       res.status(404).send({ message: "Not found Tutorial with id " + id });
-    else res.send(Data);
+    else res.send(Tutoruser);
   }
   catch (err) {
     next(err)

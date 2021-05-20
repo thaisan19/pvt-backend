@@ -28,7 +28,7 @@ module.exports = app => {
     router.put('/read-to-true/:id', admin.readToTrue)
 
     // Retrieve a single Tutor with id
-    router.get("/find-tutor/:id", admin.findOne);
+    router.get("/find-tutor/:id", admin.findOneTutor);
 
     // SendEmail
     router.put("/send-email", admin.sendEmail)
