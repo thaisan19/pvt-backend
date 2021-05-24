@@ -119,7 +119,7 @@ exports.findCourse = async (req, res, next) =>{
   }
 }
 // Update a course by the id in the request
-exports.update = (req, res) => {
+exports.update = async(req, res) => {
   if (!req.body) {
     return res.status(400).send({
       message: "Data to update can not be empty!"
@@ -129,12 +129,37 @@ exports.update = (req, res) => {
   const id = req.params.id;
 
   Course.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-    .then(data => {
+    .then(async data => {
+      
+
       if (!data) {
         res.status(404).send({
           message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found!`
         });
-      } else res.send({ message: "Tutorial was updated successfully." });
+      } else{
+        const result = req.body
+        const tutorId = result.ownerId
+        const tutorAccount = await Tutor.findOne({ _id: tutorId })
+        
+        const courseId = req.body.id
+        const newList = []
+        const tutorCourse = tutorAccount.ownedCourses
+        for(i = 0; i < tutorAccount.ownedCourses.length; i++){
+          if(tutorCourse[i]._id == courseId){
+            
+            tutorAccount.ownedCourses[i] = result
+            
+            newList.push(tutorCourse[i])
+          }else{
+            newList.push(tutorCourse[i])
+          }
+        }
+
+        tutorAccount.ownedCourses = newList
+        console.log(tutorAccount.ownedCourses)
+        await tutorAccount.save()
+          res.send({ message: "Tutorial was updated successfully." });}
+
     })
     .catch(err => {
       res.status(500).send({
@@ -146,26 +171,11 @@ exports.update = (req, res) => {
 // Delete a course with the specified id in the request
 exports.delete = async(req, res) => {
       const id = req.params.id;
-      // const Course_id = await Course.findOne({ _id: id })
-      // const TutorId = Course_id.ownerId
-      // const findCourseInTutor = await Tutor.findOne({ _id: TutorId})
-      // const lengthCourseTutor = findCourseInTutor.ownedCourses
-      // const newList = []
-
-      // for ( i = 0; i < lengthCourseTutor.length; i++) {
-        
-      //   const checkId = await Course.find({ _id: id})
-      //   if(!checkId) newList.push(lengthCourseTutor[i])
-      // }
-      // findCourseInTutor.ownedCourses = newList
-      // console.log(newList)
-      // await findCourseInTutor.save()
 
 
   Course.findByIdAndRemove(id)
     .then( async data => {
       
-
       if (!data) {
         res.status(404).send({
           message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
