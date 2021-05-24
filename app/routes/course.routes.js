@@ -10,7 +10,9 @@ module.exports = app => {
 
     
     // Retrieve all course
-    router.get("/published", course.findAll);
+    router.get("/all", course.findAll);
+
+    router.get("/ispublished", course.findIspublished);
 
     // Retrieve all course with single Tutor
     router.get("/find-course/:id", course.findCourse)

@@ -1,3 +1,4 @@
+const { boolean } = require("@hapi/joi");
 const { text } = require("body-parser");
 const { query } = require("express");
 const { Schema } = require("mongoose");
@@ -15,6 +16,10 @@ module.exports = mongoose => {
       tutoringDays: {type: Array, require: false},
       name: {type: String, required: true},
       price: {type: String, required: true},
+      published: {
+        type: Boolean,
+        required: false
+      },
       ownerId:{
           type: Schema.Types.ObjectId,
           ref: 'Tutor,AdminUser',

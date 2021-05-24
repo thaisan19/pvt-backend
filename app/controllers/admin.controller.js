@@ -247,7 +247,7 @@ exports.sendEmail = async (req, res, next) => {
           from: sender,
           to: result.email,
           subject: "Email confirmation",
-          html: `This is your account email: ${result.email} <br> This your your account password: ${Tutoruser.password}<br> Press <a href=www.google.com> here </a> to verify your email.`
+          html: `This is your account email: ${result.email} <br> This your your account password: ${Tutoruser.password}<br> Press <a href="https://private-tutoring.netlify.app/tutor/login"> here </a> to verify your email.`
         };
         Transport.sendMail(mailOptions, function (error, response) {
           if (error) {

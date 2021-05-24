@@ -7,7 +7,7 @@ dotenv.config();
 
 
 // Create and Save a new course
-exports.create = async (req, res) => {
+exports.create = async (req, res, next) => {
   
   try{
     if (!req.body.name) {
@@ -19,7 +19,19 @@ exports.create = async (req, res) => {
       const OwnerId = course.ownerId
       const Tutoruser = await Tutor.findOne({_id: OwnerId})
 
+      if(Tutoruser.ownedCourses.length >= 5) {
+        throw createError.Conflict("Out of Owned Courses Limit! Allow Only 5 Courses 🙏")}
+      // {
+      //   next(res.status(400).send({ message: "Out of Owned Courses Limit! Allow Only 5 Courses 🙏" }))
+      // }
+
+      course.published = false
+      console.log(course)
+
       course.ownerProfile= Tutoruser.profile
+      await course.save()
+
+      course.published = false
       await course.save()
 
       Tutoruser.ownedCourses.push(course)
@@ -63,6 +75,19 @@ exports.findAll = async(req, res) => {
       });
     });
 };
+
+// recieve all unpublished course 
+exports.findIspublished = async(req, res) => {
+  try{
+    Course.find({published: true})
+    .then(data => {
+      res.send(data)
+    })
+  }catch(error){
+    res.send(error)
+  }
+  
+}
 
 // Find a single course with an id
 exports.findOne = (req, res) => {
