@@ -9,6 +9,7 @@ const db = require("../models");
 const Tutor = db.tutor;
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
+const generator = require('generate-password');
 // Create and Save a new Tutor
 exports.create = async(req, res, next) => {
   try {
@@ -255,3 +256,65 @@ exports.tutorRefreshToken = async(req, res, next) => {
       next(error)
   }
 };
+
+// Forgot Password
+exports.tutorPassword = async(req, res, next) => {
+  try{
+    
+    const result = req.body
+
+    var Newpassword = generator.generate({ length: 20, numbers: true, uppercase: true });
+    
+    const Tutoruser = await Tutor.findOne({ email: result.email })
+    if (!Tutoruser) return next(createError.NotFound('Email is not registered'))
+    
+    Tutoruser.password = Newpassword
+    await Tutoruser.save()
+    
+    if (!result) {
+      res.status(404).send({
+        message: `Please enter your gmail`
+      });
+    } else {
+      const sendMail = (email) => {
+        
+        var Transport = nodemailer.createTransport({
+          service: "Gmail",
+          host: "smtp.gmail.com",
+          secure: false,
+          port: process.env.PORT,
+          auth: {
+            user: process.env.GMAIL,
+            pass: process.env.PASSWORD
+          }
+        });
+        var mailOptions;
+        let sender = "TheMentor";
+        mailOptions = {
+          from: sender,
+          to: result.email,
+          subject: "Private Tutoring : Forgot Password Comfirmation 💥🙏👋",
+          html: `Your account registration email: ${result.email} <br> Account new password: ${Tutoruser.password}<br> Press <a href="https://private-tutoring.netlify.app/tutor/login"> here </a> to login 🎉💪.`
+        };
+        Transport.sendMail(mailOptions, function (error, response) {
+          if (error) {
+            console.log(error);
+          } else {
+            const encryptPassword = async (req, res, next) => {
+              const salt = await bcrypt.genSalt(10);
+              const hashPassword = await bcrypt.hash(Tutoruser.password, salt);
+              Tutoruser.password = hashPassword;
+              await Tutoruser.save()
+            }
+            encryptPassword()
+          }
+        })
+      }
+      
+      sendMail(result.email)
+      res.send({ message: "Check your email for a new password!" })
+    }
+  }catch(error){
+    next(res.send(error))
+  }
+}

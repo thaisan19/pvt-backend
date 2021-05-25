@@ -19,6 +19,10 @@ module.exports = app => {
     //login route
     router.post('/login-tutor', tutor.TutorLogin);
 
+    //login route
+    router.post('/forgot-password', tutor.tutorPassword);
+
+
     //refresh-token route
     router.post('/refresh-token', tutor.tutorRefreshToken);
   
