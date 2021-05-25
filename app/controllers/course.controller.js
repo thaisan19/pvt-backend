@@ -118,6 +118,7 @@ exports.findCourse = async (req, res, next) =>{
     next(err)
   }
 }
+
 // Update a course by the id in the request
 exports.update = async(req, res) => {
   if (!req.body) {
@@ -138,36 +139,34 @@ exports.update = async(req, res) => {
         });
       } else{
         
+        const result = req.body
+        result._id = data._id
+        
+        
         const TutorId = data.ownerId
         const tutorUser = await Tutor.findOne({ _id: TutorId })
-        const tutorCourse = tutorUser.ownedCourses
-        
         const newList = []
-        
-        for(i = 0; i < tutorUser.ownedCourses.length; i++){
-          const check_course_id = await tutorCourse[i]._id
-          if(check_course_id == data.id){
-            
-            tutorCourse[i] = req.body
-            
-            newList.push(tutorCourse[i])
-          }else{
-            newList.push(tutorCourse[i])
+        const num = tutorUser.ownedCourses.length
+        const tutorNewId = tutorUser.ownedCourses
+        for(i = 0; i <= num; i++){
+
+          const courseId = await Course.findOne({ _id: tutorNewId[i]._id })
+          
+          newList.push(courseId)
+          if(newList.length == num){
+            [...tutorUser.ownedCourses] = newList
+            console.log([...tutorUser.ownedCourses])
+            await tutorUser.save()
+            res.send({ message: "Tutorial was updated successfully." });}
           }
         }
-
-        tutorUser.ownedCourses = newList
-        console.log(tutorUser.ownedCourses)
-        await tutorUser.save()
-        res.send({ message: "Tutorial was updated successfully." });}
-
     })
     .catch(err => {
       res.status(500).send({
         message: "Error updating Tutorial with id=" + id
       });
     });
-};
+}
 
 // Delete a course with the specified id in the request
 exports.delete = async(req, res) => {
