@@ -79,7 +79,7 @@ exports.findOneReq = async(req, res) => {
 
   // Find all unread request
 exports.findAllUnread = (req, res) => {
-    Request.find({ read: false })
+    Request.find({ read: false, delete: false })
       .then(data => {
         res.send(data);
       })

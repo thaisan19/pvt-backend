@@ -402,6 +402,23 @@ exports.update = async (req, res, next) => {
     next(error)
   }
 };
+
+// Delete all Tutor from the database.
+exports.deleteToTrue = async(req, res, next) => {
+  try{
+    const id = req.params.id;
+    if(!id) next(createError.NotFound('Wrong id'))
+    const tutorUser = await Tutor.findOne({ _id: id })
+    if(!tutorUser) next(createError.NotFound('User unfound'))
+    tutorUser.delete = true
+    await tutorUser.save()
+    res.send("delete successfully")
+  }catch(error){
+    res.send(error)
+  }
+  
+};
+
 // Delete all Tutor from the database.
 exports.deleteAll = (req, res) => {
   Tutor.deleteMany({})

@@ -27,6 +27,9 @@ module.exports = app => {
     //update read to true
     router.put('/read-to-true/:id', admin.readToTrue)
 
+    //update read to true
+    router.put('/delete-to-true/:id', admin.deleteToTrue)
+
     // Retrieve a single Tutor with id
     router.get("/find-tutor/:id", admin.findOneTutor);
 
