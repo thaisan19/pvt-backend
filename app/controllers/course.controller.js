@@ -137,17 +137,18 @@ exports.update = async(req, res) => {
           message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found!`
         });
       } else{
-        const result = req.body
-        const tutorId = result.ownerId
-        const tutorAccount = await Tutor.findOne({ _id: tutorId })
         
-        const courseId = req.body.id
+        const TutorId = data.ownerId
+        const tutorUser = await Tutor.findOne({ _id: TutorId })
+        const tutorCourse = tutorUser.ownedCourses
+        
         const newList = []
-        const tutorCourse = tutorAccount.ownedCourses
-        for(i = 0; i < tutorAccount.ownedCourses.length; i++){
-          if(tutorCourse[i]._id == courseId){
+        
+        for(i = 0; i < tutorUser.ownedCourses.length; i++){
+          const check_course_id = await tutorCourse[i]._id
+          if(check_course_id == data.id){
             
-            tutorAccount.ownedCourses[i] = result
+            tutorCourse[i] = req.body
             
             newList.push(tutorCourse[i])
           }else{
@@ -155,10 +156,10 @@ exports.update = async(req, res) => {
           }
         }
 
-        tutorAccount.ownedCourses = newList
-        console.log(tutorAccount.ownedCourses)
-        await tutorAccount.save()
-          res.send({ message: "Tutorial was updated successfully." });}
+        tutorUser.ownedCourses = newList
+        console.log(tutorUser.ownedCourses)
+        await tutorUser.save()
+        res.send({ message: "Tutorial was updated successfully." });}
 
     })
     .catch(err => {
