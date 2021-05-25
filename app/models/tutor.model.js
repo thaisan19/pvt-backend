@@ -30,6 +30,10 @@ module.exports = mongoose => {
         type: Array,
         require: false
       },
+      delete:{
+        type: Boolean,
+        required: false
+      },
       // profile: {type: Buffer, require: false },
       // cv: {type: Buffer, require: false },
       published: Boolean,

@@ -20,6 +20,10 @@ module.exports = mongoose => {
         type: Boolean,
         required: false
       },
+      delete:{
+        type: Boolean,
+        required: false
+      },
       ownerId:{
           type: Schema.Types.ObjectId,
           ref: 'Tutor,AdminUser',

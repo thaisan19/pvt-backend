@@ -41,6 +41,10 @@ module.exports = mongoose => {
         type: Array,
         require: true
     },
+    delete:{
+        type: Boolean,
+        required: false
+      },
     read:{ 
         type: Boolean,
         require: true
