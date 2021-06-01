@@ -230,6 +230,9 @@ exports.TutorLogin = async(req, res, next) => {
   try{
       const result = req.body
       const Tutoruser = await Tutor.findOne({ email: result.email})
+
+      if(Tutoruser.delete == true) return next(createError.NotFound('Email is not registered'))
+
       if(!Tutoruser) return next(createError.NotFound('Email is not registered'))
       const validPassword = await bcrypt.compare(result.password, Tutoruser.password)
       if(!validPassword) return next(createError.Unauthorized('Email/Password not valid'))

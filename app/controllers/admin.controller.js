@@ -66,13 +66,13 @@ exports.createTutor = async (req, res, next) => {
       tutor.cv.push(cvUrl + '/uploads/' + req.files[i].filename)
     }
 
-
     const role = "tutor"
     const read = false
     const published = false
     tutor.read = read
     tutor.published = published
     tutor.role = role
+    tutor.delete = false
     // Save Tutor in the database
     const newTutor = new Tutor(tutor)
     const savedTutor = await newTutor.save()
