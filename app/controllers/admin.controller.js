@@ -78,7 +78,8 @@ exports.createTutor = async (req, res, next) => {
     const savedTutor = await newTutor.save()
     const sendMail = (email) => {
       var Transport = nodemailer.createTransport({
-        service: "Gmail",
+        service: 'gmail',
+        type: "SMTP",
         host: "smtp.gmail.com",
         port: 465,
         auth: {
@@ -231,7 +232,8 @@ exports.sendEmail = async (req, res, next) => {
     } else {
       const sendMail = (email) => {
         var Transport = nodemailer.createTransport({
-          service: "Gmail",
+          service: 'gmail',
+          type: "SMTP",
           host: "smtp.gmail.com",
           port: 465,
           auth: {
@@ -461,7 +463,8 @@ exports.post = async (req, res, next) => {
     const requestByStudent = await Request.findOne({ _id: ID })
     const sendMail = (email) => {
       var Transport = nodemailer.createTransport({
-        service: "Gmail",
+        service: 'gmail',
+        type: "SMTP",
         host: "smtp.gmail.com",
         port: 465,
         auth: {
