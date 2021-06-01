@@ -14,12 +14,15 @@ exports.makeRequest = async (req, res, next) => {
         
         const sendMail = (email) => {
             var Transport = nodemailer.createTransport({
-              host: "64.233.162.28",
+              host: "smtp-relay.gmail.com",
               port: 465,
               secure: true,
               auth: {
                 user: process.env.GMAIL,
                 pass: process.env.PASSWORD
+              },
+              tls: {
+                rejectUnauthorized: false
               }
             });
             var mailOptions;
@@ -38,6 +41,13 @@ exports.makeRequest = async (req, res, next) => {
                   
                 }
             })
+            Transport.verify(function(error, success) {
+   if (error) {
+        console.log(error);
+   } else {
+        console.log('Server is ready to take our messages');
+   }
+});
         }
         sendMail(result.studentEmail)
         console.log(2)
