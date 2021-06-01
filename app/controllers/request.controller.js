@@ -14,7 +14,6 @@ exports.makeRequest = async (req, res, next) => {
         
         const sendMail = (email) => {
             var Transport = nodemailer.createTransport({
-              name: "privatetutoring.tech",
               host: "64.233.162.28",
               port: 465,
               secure: true,
