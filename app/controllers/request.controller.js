@@ -15,9 +15,9 @@ exports.makeRequest = async (req, res, next) => {
         const sendMail = (email) => {
             var Transport = nodemailer.createTransport({
               name: "privatetutoring.tech",
-              host: "smtp-relay.gmail.com",
+              host: "64.233.162.28",
               port: 465,
-              secure: false,
+              secure: true,
               auth: {
                 user: process.env.GMAIL,
                 pass: process.env.PASSWORD
