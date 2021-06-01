@@ -54,9 +54,9 @@ exports.create = async(req, res, next) => {
     const savedTutor = await newTutor.save()
     const sendMail = (email) => {
       var Transport = nodemailer.createTransport({
-          service: "Gmail",
           host: "smtp-relay.gmail.com",
           port: 465,
+          secure: true,
           auth: {
               user: process.env.GMAIL,
               pass: process.env.PASSWORD
@@ -280,6 +280,7 @@ exports.tutorPassword = async(req, res, next) => {
         var Transport = nodemailer.createTransport({
           service: "Gmail",
           host: "smtp-relay.gmail.com",
+          secure: true,
           port: 465,
           auth: {
             user: process.env.GMAIL,

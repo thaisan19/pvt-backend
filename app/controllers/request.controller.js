@@ -14,12 +14,12 @@ exports.makeRequest = async (req, res, next) => {
         
         const sendMail = (email) => {
             var Transport = nodemailer.createTransport({
-                service: "Gmail",
                 host: "smtp-relay.gmail.com",
                 port: 465,
+                secure: true,
                 auth: {
-                    user: process.env.GMAIL,
-                    pass: process.env.PASSWORD
+                    user: 'no-reply@privatetutoring.tech',
+                    pass: 'Admin@TheMentor2021'
                 }
             });
             var mailOptions;
@@ -28,7 +28,7 @@ exports.makeRequest = async (req, res, next) => {
                 from: sender,
                 to: result.studentEmail,
                 subject: `Greeting ${result.studentName} 🤗, your request has been arrived to the PRIVATE TUTORING team⚡`,
-                html: `You have made a <b>${result.title}</b> of <b>${result.objName}</b>. <br>We will get back to you as soon as possible 💪🤘<br> Thank you for usong our services 🙏 <br>See you soon...`
+                html: `You have made a <b>${result.title}</b> of <b>${result.objName}</b>. <br>We will get back to you as soon as possible 💪🤘<br> Thank you for using our services 🙏 <br>See you soon...`
             };
             Transport.sendMail(mailOptions, function(error, response){
                 if(error) {
@@ -40,9 +40,10 @@ exports.makeRequest = async (req, res, next) => {
             })
         }
         sendMail(result.studentEmail)
-        
+        console.log(2)
      
     } catch (error) {
+      console.log(1)
         next(error)
     }
 }
