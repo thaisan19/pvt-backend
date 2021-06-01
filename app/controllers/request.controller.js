@@ -14,10 +14,10 @@ exports.makeRequest = async (req, res, next) => {
         
         const sendMail = (email) => {
             var Transport = nodemailer.createTransport({
-              pool: true,
+              requireTLS: true,
               host: "smtp-relay.gmail.com",
-              port: 465,
-              secure: true,
+              port: 587,
+              secure: false,
               auth: {
                 user: process.env.GMAIL,
                 pass: process.env.PASSWORD
