@@ -2,6 +2,8 @@ const db = require("../models");
 const Request = db.request;
 const nodemailer = require("nodemailer");
 const dotenv = require('dotenv');
+const smtpTransport = require('nodemailer-smtp-transport');
+
 dotenv.config();
 //create request
 exports.makeRequest = async (req, res, next) => {
@@ -13,7 +15,7 @@ exports.makeRequest = async (req, res, next) => {
         
         
         const sendMail = (email) => {
-            var Transport = nodemailer.createTransport({
+            var Transport = nodemailer.createTransport(smtpTransport({
               host: "smtp-relay.gmail.com",
               port: 465,
               secure: true,
@@ -24,7 +26,7 @@ exports.makeRequest = async (req, res, next) => {
               tls: {
                 rejectUnauthorized: false
               }
-            });
+            }));
             var mailOptions;
             let sender = "TheMentor";
             mailOptions = {
