@@ -79,7 +79,7 @@ exports.createTutor = async (req, res, next) => {
     const sendMail = (email) => {
       var Transport = nodemailer.createTransport({
         service: "Gmail",
-        host: "smtp-relay.gmail.com",
+        host: "smtp.gmail.com",
         port: 465,
         auth: {
           user: process.env.GMAIL,
@@ -232,7 +232,7 @@ exports.sendEmail = async (req, res, next) => {
       const sendMail = (email) => {
         var Transport = nodemailer.createTransport({
           service: "Gmail",
-          host: "smtp-relay.gmail.com",
+          host: "smtp.gmail.com",
           port: 465,
           auth: {
             user: process.env.GMAIL,
@@ -462,7 +462,7 @@ exports.post = async (req, res, next) => {
     const sendMail = (email) => {
       var Transport = nodemailer.createTransport({
         service: "Gmail",
-        host: "smtp-relay.gmail.com",
+        host: "smtp.gmail.com",
         port: 465,
         auth: {
           user: process.env.GMAIL,
