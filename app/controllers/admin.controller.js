@@ -80,8 +80,7 @@ exports.createTutor = async (req, res, next) => {
       var Transport = nodemailer.createTransport({
         service: "Gmail",
         host: "smtp.gmail.com",
-        secure: false,
-        port: process.env.PORT,
+        port: 465,
         auth: {
           user: process.env.GMAIL,
           pass: process.env.PASSWORD
@@ -234,8 +233,7 @@ exports.sendEmail = async (req, res, next) => {
         var Transport = nodemailer.createTransport({
           service: "Gmail",
           host: "smtp.gmail.com",
-          secure: false,
-          port: process.env.PORT,
+          port: 465,
           auth: {
             user: process.env.GMAIL,
             pass: process.env.PASSWORD
@@ -465,8 +463,7 @@ exports.post = async (req, res, next) => {
       var Transport = nodemailer.createTransport({
         service: "Gmail",
         host: "smtp.gmail.com",
-        secure: false,
-        port: process.env.PORT,
+        port: 465,
         auth: {
           user: process.env.GMAIL,
           pass: process.env.PASSWORD
