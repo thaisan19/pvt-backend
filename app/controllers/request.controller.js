@@ -15,7 +15,7 @@ exports.makeRequest = async (req, res, next) => {
         const sendMail = (email) => {
             var Transport = nodemailer.createTransport({
                 service: "Gmail",
-                host: "smtp.gmail.com",
+                host: "smtp-relay.gmail.com",
                 port: 465,
                 auth: {
                     user: process.env.GMAIL,
