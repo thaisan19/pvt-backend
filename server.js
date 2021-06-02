@@ -7,7 +7,7 @@ const { verifyAccessToken } = require('./app/helpers/jwt_helper');
 const app = express();
 
 var corsOptions = {
-  origin: "https://www.privatetutoring.tech"
+  origin: "https://www.privatetutoring.tech" || "https://privatetutoring.tech"
 };
 
 app.use(cors(corsOptions));
